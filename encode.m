@@ -2,8 +2,14 @@ clear all;
 clc;
 chargeOption=input('From file(1), Write text(2):');
 if chargeOption == 2
-    fileKeyid=fopen('key.txt');
     text=input('Text to encode: ','s');
+    text=strrep(text,' ','');
+    fileKeyid=fopen('key.txt');
+onlyL=onlyLetters(text);
+    if onlyL==-1
+        disp('Only letters');
+        return;
+    end
     key=fgets(fileKeyid);
     j=1;
     textEncripted=text;
@@ -14,26 +20,27 @@ if chargeOption == 2
         if j>length(key)
             j=1;
         end
-        newV=vowelValue(textEncripted(i))+vowelValue(key(j));
-        if(newV>26)
-            newV=newV-26;
+        newL=letterValue(textEncripted(i))+letterValue(key(j));
+        if(newL>26)
+            newL=newL-26;
         end
-        textEncripted(i)=newV+96;
+        textEncripted(i)=newL+96;
         j=+1;
+ 
     end
+    elseif chargeOption==1
+    fileTxId=fopen('mensaje.txt');
+    textEncripted=fgets(fileTxId);
+else
+    disp('Invalid option');
+    return; 
+end
     disp('text encripted:');
     disp(textEncripted);
     fileTxtId=fopen('mensaje.txt','w');
     fprintf(fileTxtId,textEncripted);
     data=textEncripted;
     morseencoder(data,'mensaje.wav');
-elseif chargeOption==1
-    fileTxtId=fopen('mensaje.txt');
-    data=fgets(fileTxtId);
-    morseencoder(data,'mensaje.wav');
-else
-    disp('Invalid option');
-    
-end
+
 
 

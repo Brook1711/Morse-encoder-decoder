@@ -1,12 +1,11 @@
 function morseencoder(text,filename)
-Fs=1000;
+Fs=1500;
 load wav;
-Dit = wav(1106:2121);
+Dit=wavread('dit.wav');
+Dah=wavread('line.wav');
 ssp = wav(2121:3133);
-Dah = wav(3133:6176);
-lsp = wav(6176:16022);
-
-% Defining Characters & Numbers
+lsp = wav(6176:12022);
+morsecode=ssp;
 A = [Dit;ssp;Dah];
 B = [Dah;ssp;Dit;ssp;Dit;ssp;Dit];
 C = [Dah;ssp;Dit;ssp;Dah;ssp;Dit];
@@ -33,6 +32,7 @@ W = [Dit;ssp;Dah;ssp;Dah];
 X = [Dah;ssp;Dit;ssp;Dit;ssp;Dah];
 Y = [Dah;ssp;Dit;ssp;Dah;ssp;Dah];
 Z = [Dah;ssp;Dah;ssp;Dit;ssp;Dit];
+enie = [Dah;ssp;Dah;ssp;Dit;ssp;Dit];
 period = [Dit;ssp;Dah;ssp;Dit;ssp;Dah;ssp;Dit;ssp;Dah];
 comma = [Dah;ssp;Dah;ssp;Dit;ssp;Dit;ssp;Dah;ssp;Dah];
 question = [Dit;ssp;Dit;ssp;Dah;ssp;Dah;ssp;Dit;ssp;Dit];
@@ -47,12 +47,14 @@ n7 = [Dah;ssp;Dah;ssp;Dit;ssp;Dit;ssp;Dit];
 n8 = [Dah;ssp;Dah;ssp;Dah;ssp;Dit;ssp;Dit];
 n9 = [Dah;ssp;Dah;ssp;Dah;ssp;Dah;ssp;Dit];
 n0 = [Dah;ssp;Dah;ssp;Dah;ssp;Dah;ssp;Dah];
-
+enie=[Dah;ssp;Dah;ssp;Dit;ssp;Dah;ssp;Dah];
 text = upper(text);
 vars ={'period','comma','question','slash_'};
 morsecode=[];
 for i=1:length(text)
-    if isvarname(text(i))
+    if text(i)=='Ñ'||text(i)=='ñ';
+        morsecode=[morsecode;[Dah;ssp;Dah;ssp;Dit;ssp;Dah;ssp;Dah]];
+    elseif isvarname(text(i))
     morsecode = [morsecode;eval(text(i))];
     elseif ismember(text(i),'.,?/')
         x = findstr(text(i),'.,?/');
@@ -65,5 +67,5 @@ for i=1:length(text)
     morsecode = [morsecode;lsp];
 end
 %morsecode=resample(morsecode,Fs,1500);
-wavwrite(morsecode,8000,16,filename);
-plot (morsecode);
+audiowrite(filename,morsecode,8000);
+%plot (morsecode);
